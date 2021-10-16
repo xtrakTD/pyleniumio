@@ -4,6 +4,9 @@ version = "1.13.2"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
+packages = [
+    { include="pyleniumio", from="../" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -27,6 +27,7 @@ setup(
         'click',
         'pyfiglet',
         'axe-selenium-python',
+        'selenium-wire',
     ],
     data_files=[
         (
