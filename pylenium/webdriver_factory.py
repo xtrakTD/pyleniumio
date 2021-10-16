@@ -1,8 +1,10 @@
 """ Factory to build WebDrivers. """
+import selenium
+
 from pylenium import driver
 from typing import List, Optional
 
-from selenium import webdriver
+from seleniumwire import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
@@ -73,7 +75,8 @@ def build_options(browser,
     elif browser == Browser.FIREFOX:
         options = webdriver.FirefoxOptions()
     elif browser == Browser.IE:
-        options = webdriver.IeOptions()
+        import selenium
+        options = selenium.webdriver.IeOptions()
     elif browser == Browser.OPERA:
         options = webdriver.ChromeOptions()
     elif browser == Browser.EDGE:
@@ -211,7 +214,7 @@ def build_edge(version: str,
     caps = build_capabilities(Browser.EDGE, capabilities)
     if local_path:
         return webdriver.Edge(local_path, capabilities=caps, **(webdriver_kwargs or {}))
-    return webdriver.Edge(EdgeChromiumDriverManager(version=version).install(),  capabilities=caps, **(webdriver_kwargs or {}))
+    return selenium.webdriver.Edge(EdgeChromiumDriverManager(version=version).install(),  capabilities=caps, **(webdriver_kwargs or {}))
 
 
 def build_firefox(version: str,
