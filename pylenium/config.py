@@ -18,6 +18,7 @@ class DriverConfig(BaseModel):
     webdriver_kwargs: dict = None
     version: str = 'latest'
     local_path: str = ''
+    seleniumwire_options: dict = {}
 
 
 class LoggingConfig(BaseModel):

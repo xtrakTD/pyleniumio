@@ -57,7 +57,7 @@ def build_capabilities(browser, capabilities: dict):
 def build_options(browser,
                   browser_options: List[str],
                   experimental_options: Optional[List[dict]],
-                  extension_paths: Optional[List[str]]):
+                  extension_paths: Optional[List[str]]) -> object:
     """ Build the Options object for Chrome or Firefox.
 
     Args:
@@ -115,7 +115,8 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
             capabilities=config.driver.capabilities,
             experimental_options=config.driver.experimental_options,
             extension_paths=config.driver.extension_paths,
-            webdriver_kwargs=config.driver.webdriver_kwargs
+            webdriver_kwargs=config.driver.webdriver_kwargs,
+            seleniumwire_options=config.driver.seleniumwire_options,
         )
     browser = config.driver.browser.lower()
     if browser == Browser.CHROME:
@@ -125,7 +126,8 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
             config.driver.experimental_options,
             config.driver.extension_paths,
             config.driver.local_path,
-            config.driver.webdriver_kwargs)
+            config.driver.webdriver_kwargs,
+            config.driver.seleniumwire_options)
     elif browser == Browser.FIREFOX:
         return build_firefox(
             config.driver.version,
@@ -170,7 +172,8 @@ def build_chrome(version: str,
                  experimental_options: Optional[List[dict]],
                  extension_paths: Optional[List[str]],
                  local_path: Optional[str],
-                 webdriver_kwargs: Optional[dict]) -> WebDriver:
+                 webdriver_kwargs: Optional[dict],
+                 seleniumwire_options: Optional[dict]) -> WebDriver:
     """ Build a ChromeDriver.
 
     Args:
@@ -186,8 +189,12 @@ def build_chrome(version: str,
     """
     options = build_options(Browser.CHROME, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Chrome(local_path, options=options, **(webdriver_kwargs or {}))
-    return webdriver.Chrome(ChromeDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))
+        return webdriver.Chrome(local_path, options=options,
+                                seleniumwire_options=seleniumwire_options,
+                                **(webdriver_kwargs or {}))
+    return webdriver.Chrome(ChromeDriverManager(version=version).install(), options=options,
+                            seleniumwire_options=seleniumwire_options,
+                            **(webdriver_kwargs or {}))
 
 
 def build_edge(version: str,
@@ -269,8 +276,8 @@ def build_ie(version: str,
     caps = build_capabilities(Browser.IE, capabilities)
     options = build_options(Browser.IE, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Ie(executable_path=local_path, options=options, capabilities=caps, **(webdriver_kwargs or {}))
-    return webdriver.Ie(executable_path=IEDriverManager(version=version).install(), options=options, capabilities=caps, **(webdriver_kwargs or {}))
+        return selenium.webdriver.Ie(executable_path=local_path, options=options, capabilities=caps, **(webdriver_kwargs or {}))
+    return selenium.webdriver.Ie(executable_path=IEDriverManager(version=version).install(), options=options, capabilities=caps, **(webdriver_kwargs or {}))
 
 
 def build_opera(version: str,
@@ -294,8 +301,8 @@ def build_opera(version: str,
     """
     options = build_options(Browser.OPERA, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Opera(executable_path=local_path, options=options, **(webdriver_kwargs or {}))
-    return webdriver.Opera(executable_path=OperaDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))
+        return selenium.webdriver.Opera(executable_path=local_path, options=options, **(webdriver_kwargs or {}))
+    return selenium.webdriver.Opera(executable_path=OperaDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))
 
 
 def build_remote(browser: str,
@@ -304,7 +311,8 @@ def build_remote(browser: str,
                  capabilities: dict,
                  experimental_options: Optional[List[dict]],
                  extension_paths: Optional[List[str]],
-                 webdriver_kwargs: Optional[dict]) -> WebDriver:
+                 webdriver_kwargs: Optional[dict],
+                 seleniumwire_options: Optional[dict]) -> WebDriver:
     """ Build a RemoteDriver connected to a Grid.
 
     Args:
@@ -318,6 +326,10 @@ def build_remote(browser: str,
 
     Returns:
         The instance of WebDriver once the connection is successful
+        :param experimental_options:
+        :param extension_paths:
+        :param webdriver_kwargs:
+        :param seleniumwire_options:
     """
     browser = browser.lower()
     caps = build_capabilities(browser, capabilities)
@@ -327,5 +339,6 @@ def build_remote(browser: str,
         command_executor=remote_url,
         desired_capabilities=caps,
         options=options,
+        seleniumwire_options=seleniumwire_options,
         **(webdriver_kwargs or {})
     )
