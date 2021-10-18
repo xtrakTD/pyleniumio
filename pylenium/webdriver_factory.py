@@ -1,8 +1,9 @@
 """ Factory to build WebDrivers. """
 import selenium
+from seleniumwire.webdriver import Remote
 
 from pylenium import driver
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from seleniumwire import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -102,7 +103,7 @@ def build_options(browser,
     return options
 
 
-def build_from_config(config: PyleniumConfig) -> WebDriver:
+def build_from_config(config: PyleniumConfig) -> Union[Remote, WebDriver]:
     """ Build a WebDriver using PyleniumConfig.
 
     PyleniumConfig is built using pylenium.json and CLI args.
@@ -173,7 +174,7 @@ def build_chrome(version: str,
                  extension_paths: Optional[List[str]],
                  local_path: Optional[str],
                  webdriver_kwargs: Optional[dict],
-                 seleniumwire_options: Optional[dict]) -> WebDriver:
+                 seleniumwire_options: Optional[dict]) -> webdriver.Chrome:
     """ Build a ChromeDriver.
 
     Args:
@@ -312,7 +313,7 @@ def build_remote(browser: str,
                  experimental_options: Optional[List[dict]],
                  extension_paths: Optional[List[str]],
                  webdriver_kwargs: Optional[dict],
-                 seleniumwire_options: Optional[dict]) -> WebDriver:
+                 seleniumwire_options: Optional[dict]) -> Remote:
     """ Build a RemoteDriver connected to a Grid.
 
     Args:

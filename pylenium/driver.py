@@ -6,7 +6,7 @@ from faker import Faker
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver
+from seleniumwire.webdriver import Remote
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -227,7 +227,7 @@ class Pylenium:
         return self._webdriver
 
     @property
-    def webdriver(self) -> WebDriver:
+    def webdriver(self) -> Union[Remote]:
         """The current instance of Selenium's `WebDriver` API."""
         return self.init_webdriver() if self._webdriver is None else self._webdriver
 
