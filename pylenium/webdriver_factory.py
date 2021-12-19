@@ -4,7 +4,8 @@ import selenium
 from pylenium import driver
 from typing import List, Optional
 
-from seleniumwire import webdriver
+# from seleniumwire import webdriver
+from selenium.webdriver.remote import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
